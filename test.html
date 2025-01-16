@@ -7,25 +7,45 @@
 </head>
 <body>
     <h1>File Reader and Writer</h1>
+    <form id="createForm">
+        <label for="fileName">File Name:</label>
+        <input type="text" id="fileName" name="fileName" required>
+        <button type="submit">Create File</button>
+    </form>
     <button id="readButton">Read File</button>
     <button id="writeButton">Write File</button>
     <div id="fileContent"></div>
 
     <script>
-        const filePath = './data.txt';
+        const createForm = document.getElementById('createForm');
         const readButton = document.getElementById('readButton');
         const writeButton = document.getElementById('writeButton');
         const fileContentDiv = document.getElementById('fileContent');
 
+        createForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const fileName = document.getElementById('fileName').value;
+            const response = await fetch(`./${fileName}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: 'Initial content of the file.'
+            });
+            fileContentDiv.textContent = `File ${fileName} created successfully!`;
+        });
+
         readButton.addEventListener('click', async () => {
-            const response = await fetch(filePath);
+            const fileName = 'data.txt'; // Replace with dynamic file name if needed
+            const response = await fetch(`./${fileName}`);
             const content = await response.text();
             fileContentDiv.textContent = `File Content: ${content}`;
         });
 
         writeButton.addEventListener('click', async () => {
+            const fileName = 'data.txt'; // Replace with dynamic file name if needed
             const newContent = `Updated content: ${fileContentDiv.textContent}`;
-            await fetch(filePath, {
+            await fetch(`./${fileName}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'text/plain'
