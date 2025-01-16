@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Reader and Writer</title>
+</head>
+<body>
+    <h1>File Reader and Writer</h1>
+    <button id="readButton">Read File</button>
+    <button id="writeButton">Write File</button>
+    <div id="fileContent"></div>
+
+    <script>
+        const filePath = './data.txt';
+        const readButton = document.getElementById('readButton');
+        const writeButton = document.getElementById('writeButton');
+        const fileContentDiv = document.getElementById('fileContent');
+
+        readButton.addEventListener('click', async () => {
+            const response = await fetch(filePath);
+            const content = await response.text();
+            fileContentDiv.textContent = `File Content: ${content}`;
+        });
+
+        writeButton.addEventListener('click', async () => {
+            const newContent = `Updated content: ${fileContentDiv.textContent}`;
+            await fetch(filePath, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'text/plain'
+                },
+                body: newContent
+            });
+            fileContentDiv.textContent = `File updated successfully!`;
+        });
+    </script>
+</body>
+</html>
